@@ -1,0 +1,56 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* --- TRYB JASNY (Warm Kitchen) --- */
+    
+    /* Tło: Lody Waniliowe (#FFF8F0) */
+    --color-background: 255 248 240;
+    
+    /* Karty: Czysta Biel (#FFFFFF) */
+    --color-surface: 255 255 255;
+    
+    /* Tekst Główny: Gorzka Czekolada (#2D241E) */
+    --color-text-main: 45 36 30;
+    
+    /* Tekst Pomocniczy: Kakao (#786B62) */
+    --color-text-muted: 120 107 98;
+    
+    /* Akcent (Przycisk): Pieczona Papryka (#D64933) */
+    --color-primary: 214 73 51;
+    
+    /* Wyróżnienie: Kurkuma (#E9C46A) */
+    --color-secondary: 233 196 106;
+  }
+
+  .dark {
+    /* --- TRYB CIEMNY (Night Cooking) --- */
+    
+    /* Tło: Ciemne Espresso (#1A1614) */
+    --color-background: 26 22 20;
+    
+    /* Karty: Ciemny Orzech (#2C2420) */
+    --color-surface: 44 36 32;
+    
+    /* Tekst Główny: Mleko Owsiane (#F2E8DC) */
+    --color-text-main: 242 232 220;
+    
+    /* Tekst Pomocniczy: Szary Beż (#A89F95) */
+    --color-text-muted: 168 159 149;
+    
+    /* Akcent (Przycisk): Jasna Terrakota (#FF8576) */
+    --color-primary: 255 133 118;
+    
+    /* Wyróżnienie: Złocisty (#F4D35E) */
+    --color-secondary: 244 211 94;
+  }
+}
+
+/* Opcjonalnie: Domyślny styl tła i tekstu dla body */
+@layer base {
+  body {
+    @apply bg-background text-text-main transition-colors duration-300;
+  }
+}

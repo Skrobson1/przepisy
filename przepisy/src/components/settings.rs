@@ -1,0 +1,57 @@
+use leptos::prelude::*;
+use crate::enums::theme::Theme;
+
+#[component]
+pub fn Settings() -> impl IntoView {
+    let set_theme = use_context::<WriteSignal<Theme>>().expect("Brak kontekstu");
+    let theme = use_context::<ReadSignal<Theme>>().expect("Brak kontekstu");
+
+    view! {
+
+<h3 class="mb-5 text-lg font-medium text-text-main">Motyw</h3>
+<ul class="grid w-full gap-6 md:grid-cols-2">
+    <li>
+        <input prop:checked=move || theme.get() == Theme::Light on:change=move |_| set_theme.set(Theme::Light) type="radio" id="theme-light" name="theme" value="theme-light" class="hidden peer" required />
+        
+        <label for="theme-light" class="inline-flex items-center justify-between w-full p-5 text-text-muted bg-surface border border-text-muted/20 rounded-xl cursor-pointer transition-all duration-200 hover:border-primary/50 hover:shadow-sm peer-checked:border-primary peer-checked:text-primary peer-checked:bg-primary/5">                           
+            <div class="block">
+                <div class="w-full font-semibold text-text-main peer-checked:text-primary">Jasny</div>
+                <div class="w-full text-sm opacity-80">Idealny na dzień</div>
+            </div>
+            <Show when=move || theme.get() == Theme::Light>
+                <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg>
+            </Show>
+        </label>
+    </li>
+    <li>
+        <input prop:checked=move || theme.get() == Theme::Dark on:change=move |_| set_theme.set(Theme::Dark) type="radio" id="theme-dark" name="theme" value="theme-dark" class="hidden peer" />
+        
+        <label for="theme-dark" class="inline-flex items-center justify-between w-full p-5 text-text-muted bg-surface border border-text-muted/20 rounded-xl cursor-pointer transition-all duration-200 hover:border-primary/50 hover:shadow-sm peer-checked:border-primary peer-checked:text-primary peer-checked:bg-primary/5">
+            <div class="block">
+                <div class="w-full font-semibold text-text-main peer-checked:text-primary">Ciemny</div>
+                <div class="w-full text-sm opacity-80">Wieczorne gotowanie</div>
+            </div>
+            <Show when=move || theme.get() == Theme::Dark>
+                <svg class="fill-current" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"/></svg>
+            </Show>
+        </label>
+    </li>
+</ul>
+
+    }
+}
+
+#[component]
+pub fn Theme_wrapper(children: Children) -> impl IntoView {
+    let theme = use_context::<ReadSignal<Theme>>().expect("Brak kontekstu");
+    view! {
+        <body class:dark=move || theme.get() == Theme::Dark>
+        <div 
+        class="h-screen w-screen flex flex-col justify-center items-center p-8"
+        
+        >
+        {children()}
+        </div>
+        </body>
+    }
+}
