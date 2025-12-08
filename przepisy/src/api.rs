@@ -2,7 +2,6 @@ use crate::models::SuggesticRecipe;
 use serde::{Serialize};
 use wasm_bindgen::prelude::*;
 
-// 1. ZMIANA: Dodajemy 'catch' i zmieniamy zwracany typ na Result
 #[wasm_bindgen]
 extern "C" {
     #[wasm_bindgen(catch, js_namespace = ["window", "__TAURI__", "core"])]
@@ -42,7 +41,6 @@ pub async fn search_suggestic(query: Option<String>) -> Result<Vec<SuggesticReci
                 return Ok(recipes);
             },
             Err(error_js) => {
-                // Konwertujemy błąd JS na String
                 let error_msg = error_js.as_string().unwrap_or("Nieznany błąd Tauri".to_string());
                 return Err(error_msg);
             }

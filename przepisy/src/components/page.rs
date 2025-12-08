@@ -4,8 +4,6 @@ use crate::enums::currentview::CurrentView;
 #[component]
 pub fn Page() -> impl IntoView {
     let _current_view = use_context::<ReadSignal<CurrentView>>().expect("Brak kontekstu");
-    //TODO:^^^ w zaleznosci czy ulubione czy strona glowna inna logika wyszukiwania i stron i wyswietlania
-
     view! {
         <div class="bg-surface block max-w-sm p-6 border border-text-muted/10 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 my-1">
     

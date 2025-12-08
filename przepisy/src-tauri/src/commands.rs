@@ -1,8 +1,6 @@
-// PLIK: src-tauri/src/commands.rs
-
 use dotenv_codegen::dotenv;
 use serde_json::json;
-use crate::models::{SuggesticRecipe, SuggesticResponse, SuggesticResponsePop}; // Importujemy modele z głównego crate'a
+use crate::models::{SuggesticRecipe, SuggesticResponse, SuggesticResponsePop};
 
 #[tauri::command]
 pub async fn fetch_recipes_backend() -> Result<Vec<SuggesticRecipe>, String> {
@@ -28,10 +26,8 @@ pub async fn fetch_recipes_backend() -> Result<Vec<SuggesticRecipe>, String> {
                 }
             }
         "#
-        // Usuwamy "variables" bo popularRecipes ich nie potrzebuje w tej wersji
     });
 
-    // Klient z rustls
     let client = reqwest::Client::builder()
         .use_rustls_tls()
         .build()
@@ -93,7 +89,6 @@ pub async fn fetch_recipes_backend_by_name(query: String) -> Result<Vec<Suggesti
         }
     });
 
-    // Klient z rustls
     let client = reqwest::Client::builder()
         .use_rustls_tls()
         .build()

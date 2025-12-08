@@ -17,14 +17,10 @@ pub fn App() -> impl IntoView {
     let (search_term, set_search_term) = signal(String::new());
     let recipe_resource = LocalResource::new(
         move || async move {
-            // W LocalResource::new nie podajemy "source" (sygnału) jako pierwszego argumentu.
-            // Zamiast tego, po prostu używamy sygnału wewnątrz bloku async.
-            // System reaktywny Leptos 0.7 sam wykryje zależność od `search_term.get()`.
             
             let term = search_term.get();
             leptos::logging::log!("FRONTEND: Wywołuję funkcję dla: {}", term);
             
-            // To zwróci Result<Vec<...>, String>
             if term.is_empty() {
                 crate::api::search_suggestic(None).await
             } else {
