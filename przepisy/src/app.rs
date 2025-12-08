@@ -1,5 +1,6 @@
 use leptos::prelude::*;
-use crate::components::{login::*, page::*, settings::*};
+use crate::api::search_suggestic;
+use crate::components::{login::*, page::*, recipe_card::*, settings::*};
 use crate::enums::{theme::Theme, currentview::CurrentView};
 
 
@@ -12,20 +13,42 @@ pub fn App() -> impl IntoView {
     provide_context(set_theme);
     provide_context(theme);
     provide_context(view_state);
+    
+    let (search_term, set_search_term) = signal(String::new());
+    let recipe_resource = LocalResource::new(
+        move || async move {
+            // W LocalResource::new nie podajemy "source" (sygnału) jako pierwszego argumentu.
+            // Zamiast tego, po prostu używamy sygnału wewnątrz bloku async.
+            // System reaktywny Leptos 0.7 sam wykryje zależność od `search_term.get()`.
+            
+            let term = search_term.get();
+            leptos::logging::log!("FRONTEND: Wywołuję funkcję dla: {}", term);
+            
+            // To zwróci Result<Vec<...>, String>
+            if term.is_empty() {
+                crate::api::search_suggestic(None).await
+            } else {
+                crate::api::search_suggestic(Some(term)).await
+            }
+        }
+    );
 
     view! {
-<Theme_wrapper>
+//<Theme_wrapper>
+    <div class="container mx-auto p-4 bg-background min-h-screen transition-colors duration-300">
     <Show when=move || page_counter_vis.get()>
-    <form class="max-w-md mx-auto absolute top-6 left-0 right-0 px-4 my-2 z-10">   
+    <div class="max-w-md mx-auto fixed top-6 left-0 right-0 px-4 my-2 z-10">   
         <label for="search" class="block mb-2.5 text-sm font-medium text-text-main sr-only">Search</label>
         <div class="relative">
             <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                 <svg class="w-4 h-4 text-text-muted" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="m21 21-3.5-3.5M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"/></svg>
             </div>
-            <input type="search" id="search" class="block w-full p-3 ps-9 bg-surface border border-text-muted/20 text-text-main text-sm rounded-base focus:ring-primary focus:border-primary shadow-sm placeholder:text-text-muted/70" placeholder="Szukaj przepisu..." required />
-            <button type="button" class="absolute end-1.5 bottom-1.5 bg-primary hover:bg-primary/90 text-white box-border border border-transparent focus:ring-4 focus:ring-primary/30 shadow-sm font-medium leading-5 rounded text-xs px-3 py-1.5 focus:outline-none transition-colors">Szukaj</button>
+            <input type="search"
+            on:change=move |ev| set_search_term.set(event_target_value(&ev)) 
+            id="search" class="block w-full p-3 ps-9 bg-surface border border-text-muted/20 text-text-main text-sm rounded-base focus:ring-primary focus:border-primary shadow-sm placeholder:text-text-muted/70" placeholder="Szukaj przepisu..." required />
+            <button on:click = move |_| {set_search_term.set(String::from("pasta"));} type="button" class="absolute end-1.5 bottom-1.5 bg-primary hover:bg-primary/90 text-white box-border border border-transparent focus:ring-4 focus:ring-primary/30 shadow-sm font-medium leading-5 rounded text-xs px-3 py-1.5 focus:outline-none transition-colors">Szukaj</button>
         </div>
-    </form>
+    </div>
     </Show>
     
     {move || match view_state.get() {
@@ -33,17 +56,39 @@ pub fn App() -> impl IntoView {
                 <Login/>
             }.into_any(),
             CurrentView::Home => view! {
-                <Page/>
+            <div class="pt-28 pb-24"> 
+                <Suspense fallback=move || view! { <div class="text-center mt-10">"Ładowanie..."</div> }>
+                    {move || {
+                        recipe_resource.get().map(|res| match &*res {
+                            Ok(recipes) => {
+                                let recipes_owned = recipes.clone();
+                                view! {
+                                    <div class="grid grid-cols-1 gap-6 w-full max-w-md mx-auto">
+                                        <For
+                                            each=move || recipes_owned.clone()
+                                            key=|recipe| recipe.id.clone()
+                                            children=move |recipe| view! {
+                                                <SuggesticCard recipe=recipe />
+                                            }
+                                        />
+                                    </div>
+                                }.into_any()
+                            },
+                            Err(e) => view! { <div class="mt-10 text-center text-red-500">{e.to_string()}</div> }.into_any()
+                        })
+                    }}
+                </Suspense>
+            </div>
             }.into_any(),
             CurrentView::Settings => view! {
                 <Settings/>
             }.into_any(),
         }}
-
+    
     <div class="fixed bottom-0 z-50 w-full h-16 -translate-x-1/2 bg-surface border-t border-text-muted/10 left-1/2 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
     <div class="grid h-full max-w-lg grid-cols-6 mx-auto">
         
-        <button on:click=move |_| {set_view_state.set(CurrentView::Home); set_page_counter_vis.set(true);} data-tooltip-target="tooltip-document" type="button" class="inline-flex flex-col items-center justify-center px-5 hover:bg-background/50 group transition-colors">
+        <button on:click=move |_| {set_view_state.set(CurrentView::Home); set_search_term.set(String::new()); set_page_counter_vis.set(true);} data-tooltip-target="tooltip-document" type="button" class="inline-flex flex-col items-center justify-center px-5 hover:bg-background/50 group transition-colors">
             <svg class="w-6 h-6 mb-1 text-text-muted group-hover:text-primary transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5"/></svg>
             <span class="sr-only">New document</span>
         </button>
@@ -100,6 +145,7 @@ pub fn App() -> impl IntoView {
         </div>
     </div>
 </div>
-</Theme_wrapper>
+</div>
+//</Theme_wrapper>
     }
 }

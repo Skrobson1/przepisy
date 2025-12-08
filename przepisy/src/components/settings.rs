@@ -6,12 +6,31 @@ pub fn Settings() -> impl IntoView {
     let set_theme = use_context::<WriteSignal<Theme>>().expect("Brak kontekstu");
     let theme = use_context::<ReadSignal<Theme>>().expect("Brak kontekstu");
 
+    Effect::new(move |_| {
+        let doc = window().document().unwrap().document_element().unwrap();
+        
+        match theme.get() {
+            Theme::Dark => {
+                // Dodaje klasę 'dark' do <html>
+                let _ = doc.class_list().add_1("dark");
+            }
+            Theme::Light => {
+                // Usuwa klasę 'dark' z <html>
+                let _ = doc.class_list().remove_1("dark");
+            }
+        }
+    });
+
+    let toggle_theme = move |_| {
+        set_theme.update(|t| *t = if *t == Theme::Light { Theme::Dark } else { Theme::Light });
+    };
+
     view! {
 
 <h3 class="mb-5 text-lg font-medium text-text-main">Motyw</h3>
 <ul class="grid w-full gap-6 md:grid-cols-2">
     <li>
-        <input prop:checked=move || theme.get() == Theme::Light on:change=move |_| set_theme.set(Theme::Light) type="radio" id="theme-light" name="theme" value="theme-light" class="hidden peer" required />
+        <input prop:checked=move || theme.get() == Theme::Light on:change=toggle_theme type="radio" id="theme-light" name="theme" value="theme-light" class="hidden peer" required />
         
         <label for="theme-light" class="inline-flex items-center justify-between w-full p-5 text-text-muted bg-surface border border-text-muted/20 rounded-xl cursor-pointer transition-all duration-200 hover:border-primary/50 hover:shadow-sm peer-checked:border-primary peer-checked:text-primary peer-checked:bg-primary/5">                           
             <div class="block">
@@ -24,7 +43,7 @@ pub fn Settings() -> impl IntoView {
         </label>
     </li>
     <li>
-        <input prop:checked=move || theme.get() == Theme::Dark on:change=move |_| set_theme.set(Theme::Dark) type="radio" id="theme-dark" name="theme" value="theme-dark" class="hidden peer" />
+        <input prop:checked=move || theme.get() == Theme::Dark on:change=toggle_theme type="radio" id="theme-dark" name="theme" value="theme-dark" class="hidden peer" />
         
         <label for="theme-dark" class="inline-flex items-center justify-between w-full p-5 text-text-muted bg-surface border border-text-muted/20 rounded-xl cursor-pointer transition-all duration-200 hover:border-primary/50 hover:shadow-sm peer-checked:border-primary peer-checked:text-primary peer-checked:bg-primary/5">
             <div class="block">
@@ -41,17 +60,15 @@ pub fn Settings() -> impl IntoView {
     }
 }
 
-#[component]
-pub fn Theme_wrapper(children: Children) -> impl IntoView {
-    let theme = use_context::<ReadSignal<Theme>>().expect("Brak kontekstu");
-    view! {
-        <body class:dark=move || theme.get() == Theme::Dark>
-        <div 
-        class="h-screen w-screen flex flex-col justify-center items-center p-8"
-        
-        >
-        {children()}
-        </div>
-        </body>
-    }
-}
+// #[component]
+// pub fn Theme_wrapper(children: Children) -> impl IntoView {
+//     let theme = use_context::<ReadSignal<Theme>>().expect("Brak kontekstu");
+//     view! {
+//         <body class:dark=move || theme.get() == Theme::Dark>
+//         <div 
+//         class="h-screen w-screen">
+//         {children()}
+//         </div>
+//         </body>
+//     }
+// }

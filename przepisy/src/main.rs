@@ -3,6 +3,8 @@ mod components;
 mod enums;
 use app::*;
 use leptos::prelude::*;
+mod models;
+mod api;
 
 fn main() {
     console_error_panic_hook::set_once();
