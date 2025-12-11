@@ -1,3 +1,4 @@
+use tauri_plugin_store::PluginBuilder;
 
 #[path = "../../src/models.rs"]
 pub mod models;
@@ -12,8 +13,15 @@ pub fn run() {
     );
 
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
+        .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_shell::init())
-        .invoke_handler(tauri::generate_handler![commands::fetch_recipes_backend, commands::fetch_recipes_backend_by_name])
+        .invoke_handler(tauri::generate_handler![
+            commands::fetch_recipes_backend,
+            commands::fetch_recipes_backend_by_name,
+            commands::fetch_translation,
+            commands::fetch_recipe_details
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

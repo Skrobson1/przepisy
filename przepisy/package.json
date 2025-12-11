@@ -9,6 +9,8 @@
   "description": "This template should help get you started developing with Tauri and Leptos.",
   "main": "tailwind.config.js",
   "dependencies": {
+    "@tauri-apps/plugin-fs": "^2.4.4",
+    "@tauri-apps/plugin-store": "^2.4.1",
     "baseline-browser-mapping": "^2.8.32",
     "browserslist": "^4.28.0",
     "caniuse-lite": "^1.0.30001757",

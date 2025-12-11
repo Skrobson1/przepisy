@@ -1,10 +1,12 @@
 use leptos::prelude::*;
-use crate::enums::theme::Theme;
+use crate::enums::{theme::Theme, currentview::CurrentView};
 
 #[component]
 pub fn Settings() -> impl IntoView {
     let set_theme = use_context::<WriteSignal<Theme>>().expect("Brak kontekstu");
     let theme = use_context::<ReadSignal<Theme>>().expect("Brak kontekstu");
+    let set_view_state = use_context::<WriteSignal<CurrentView>>().expect("View state context missing");
+    let set_page_counter_vis = use_context::<WriteSignal<bool>>().expect("Navbar state missing");
 
     Effect::new(move |_| {
         let doc = window().document().unwrap().document_element().unwrap();
@@ -26,7 +28,11 @@ pub fn Settings() -> impl IntoView {
     };
 
     view! {
-
+<div class="flex items-center justify-between mb-6 sticky top-4 z-20">
+    <button on:click=move |_| { set_view_state.set(CurrentView::Home); set_page_counter_vis.set(true); } class="p-2 rounded-full bg-surface/80 backdrop-blur-md shadow-sm hover:bg-surface text-text-main hover:text-primary transition-all duration-300">
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+    </button>
+</div>
 <h3 class="mb-5 text-lg font-medium text-text-main">Motyw</h3>
 <ul class="grid w-full gap-6 md:grid-cols-2">
     <li>
