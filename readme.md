@@ -1,6 +1,6 @@
 ## Wymagania
 - [Node.js](https://nodejs.org/en)
-- [Zależności systemowe](https://v2.tauri.app/start/prerequisites/)
+- [Zależności systemowe](https://v2.tauri.app/start/prerequisites/#system-dependencies)
 - [Rust](https://rust-lang.org/)
 
 ## Tauri CLI
