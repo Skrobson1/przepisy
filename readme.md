@@ -14,6 +14,9 @@ cargo install trunk
 # Dodanie celu kompilacji dla WebAssembly
 rustup target add wasm32-unknown-unknown
 ```
+## API
+- Aby aplikacja działała poprawnie należy wkleic klucz API do pliku .env w głownym katalogu projektu 
+(wysłałem w wiadomości prywatnej na teams)
 ## Uruchomienie aplikacji
 ```bash
 cd przepisy-main/przepisy
