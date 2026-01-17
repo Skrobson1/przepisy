@@ -1,5 +1,3 @@
-use tauri_plugin_store::PluginBuilder;
-
 #[path = "../../src/models.rs"]
 pub mod models;
 

@@ -1,8 +1,6 @@
-use crate::components::UserSettings;
 use crate::models::{SuggesticRecipe, SuggesticRecipeDetails};
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
-use crate::components::UserSettings;
 
 #[wasm_bindgen]
 extern "C" {
