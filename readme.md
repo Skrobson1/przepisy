@@ -1,5 +1,5 @@
 ## Wymagania
-- [Node.js](nodejs.org)
+- [Node.js](https://nodejs.org/en)
 - [Zależności systemowe](https://v2.tauri.app/start/prerequisites/)
 - [Rust](https://rust-lang.org/)
 
