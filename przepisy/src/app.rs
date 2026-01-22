@@ -1,5 +1,5 @@
 use crate::api::{search_suggestic, translate_to};
-use crate::components::{login::*, recipe_card::*, recipe_detail::RecipeDetail, settings::*};
+use crate::components::{recipe_card::*, recipe_detail::RecipeDetail, settings::*};
 use crate::enums::{currentview::CurrentView, theme::Theme};
 use leptos::prelude::*;
 use leptos::task::spawn_local;
@@ -128,9 +128,9 @@ pub fn App() -> impl IntoView {
         </Show>
 
         {move || match view_state.get() {
-                CurrentView::Login => view! {
-                    <Login/>
-                }.into_any(),
+                // CurrentView::Login => view! {
+                //     <Login/>
+                // }.into_any(),
                 CurrentView::Home => view! {
                 <div class="pt-28 pb-24">
                     <Suspense fallback=move || view! { <div class="text-center mt-10">"Ładowanie..."</div> }>
@@ -235,14 +235,14 @@ pub fn App() -> impl IntoView {
                 <div class="tooltip-arrow" data-popper-arrow></div>
             </div>
 
-            <button on:click=move |_| {set_view_state.set(CurrentView::Login); set_page_counter_vis.set(false);}  data-tooltip-target="tooltip-profile" type="button" class="inline-flex flex-col items-center justify-center px-5 hover:bg-background/50 group transition-colors">
-                <svg class="w-6 h-6 mb-1 text-text-muted group-hover:text-primary transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
-                <span class="sr-only">Profile</span>
-            </button>
-            <div id="tooltip-profile" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-background transition-opacity duration-300 bg-text-main rounded-base shadow-sm opacity-0 tooltip">
-                Profile
-                <div class="tooltip-arrow" data-popper-arrow></div>
-            </div>
+            // <button on:click=move |_| {set_view_state.set(CurrentView::Login); set_page_counter_vis.set(false);}  data-tooltip-target="tooltip-profile" type="button" class="inline-flex flex-col items-center justify-center px-5 hover:bg-background/50 group transition-colors">
+            //     <svg class="w-6 h-6 mb-1 text-text-muted group-hover:text-primary transition-colors" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0 0a8.949 8.949 0 0 0 4.951-1.488A3.987 3.987 0 0 0 13 16h-2a3.987 3.987 0 0 0-3.951 3.512A8.948 8.948 0 0 0 12 21Zm3-11a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/></svg>
+            //     <span class="sr-only">Profile</span>
+            // </button>
+            // <div id="tooltip-profile" role="tooltip" class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-background transition-opacity duration-300 bg-text-main rounded-base shadow-sm opacity-0 tooltip">
+            //     Profile
+            //     <div class="tooltip-arrow" data-popper-arrow></div>
+            // </div>
         </div>
     </div>
     </Show>

@@ -1,6 +1,6 @@
 #[derive(Clone)]
 pub enum CurrentView {
-    Login,
+    //Login,
     Home,
     Settings,
     RecipeDetail(String),
