@@ -1,7 +1,6 @@
 use leptos::prelude::*;
 use crate::enums::{theme::Theme, currentview::CurrentView};
 use crate::models::{Settings};
-use gloo_storage::{LocalStorage, Storage};
 
 #[component]
 pub fn Settings() -> impl IntoView {

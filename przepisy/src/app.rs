@@ -19,21 +19,29 @@ pub fn App() -> impl IntoView {
     let (settings_state, set_settings) = signal(initial_settings.clone());
     let (theme, set_theme) = signal(initial_settings.theme);
 
-    create_effect(move |_| {
+    Effect::new(move |_| {
+        let doc = window().document().unwrap().document_element().unwrap();
+        match theme.get() {
+            Theme::Dark => { let _ = doc.class_list().add_1("dark"); }
+            Theme::Light => { let _ = doc.class_list().remove_1("dark"); }
+        }
+    });
+
+    Effect::new(move |_| {
         let current_settings = settings_state.get();
         if let Err(e) = LocalStorage::set("settings", &current_settings) {
             leptos::logging::error!("Failed to save settings: {:?}", e);
         }
     });
 
-    let (saved_recipes, set_saved_recipes) = create_signal(
+    let (saved_recipes, set_saved_recipes) = signal(
         LocalStorage::get("favorites")
             .unwrap_or(SavedRecipes {
                 recipes: vec![]
             })
     );
 
-    create_effect(move |_| {
+    Effect::new(move |_| {
         let current_favorites = saved_recipes.get();
         let _ = LocalStorage::set("favorites", &current_favorites);
     });
