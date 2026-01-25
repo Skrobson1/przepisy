@@ -1,3 +1,6 @@
+#[path = "../../src/enums/mod.rs"]
+pub mod enums;
+
 #[path = "../../src/models.rs"]
 pub mod models;
 

@@ -1,4 +1,5 @@
 #![allow(warnings)]
+use crate::enums::{currentview::CurrentView, theme::Theme};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
@@ -9,6 +10,24 @@ pub struct SuggesticRecipe {
     pub main_image: Option<String>,
     pub total_time: Option<String>,
     pub serving: Option<f32>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct SavedRecipes {
+    pub recipes: Vec<SuggesticRecipe>,
+}
+
+#[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
+pub struct Settings {
+    pub theme: Theme,
+}
+
+impl Default for Settings {
+    fn default() -> Self {
+        Self {
+            theme: Theme::Light,
+        }
+    }
 }
 
 #[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
